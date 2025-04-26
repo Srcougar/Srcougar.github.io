@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Generador de Excusas Guardable</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap');
+
+    body {
+      background: #f7d794;
+      font-family: 'Comic Neue', cursive;
+      text-align: center;
+      padding: 50px;
+    }
+    h1 {
+      color: #2d3436;
+      font-size: 40px;
+      margin-bottom: 20px;
+    }
+    #excusa {
+      margin: 30px;
+      font-size: 24px;
+      color: #6c5ce7;
+      min-height: 100px;
+      padding: 20px;
+    }
+    button {
+      padding: 10px 25px;
+      font-size: 18px;
+      background: #00cec9;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin: 10px;
+    }
+    button:hover {
+      background: #0984e3;
+    }
+    select, input {
+      font-size: 18px;
+      padding: 8px;
+      border-radius: 8px;
+      margin: 10px;
+      border: 2px solid #00cec9;
+      outline: none;
+    }
+    input {
+      width: 250px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>¡Generador de Excusas Guardable!</h1>
+
+  <div>
+    <select id="categoria">
+      <option value="trabajo">Trabajo</option>
+      <option value="escuela">Escuela</option>
+      <option value="amigos">Amigos</option>
+      <option value="pareja">Pareja</option>
+      <option value="cena">Cena</option>
+      <option value="familia">Familia</option>
+      <option value="deporte">Deporte</option>
+      <option value="reuniones">Reuniones</option>
+      <option value="viajes">Viajes</option>
+    </select>
+    <br>
+    <button onclick="generarExcusa()">¡Generar Excusa!</button>
+  </div>
+
+  <div id="excusa">Elige una categoría y genera tu excusa...</div>
+
+  <hr>
+
+  <h2>Agregar nueva excusa</h2>
+  <div>
+    <select id="categoriaNueva">
+      <option value="trabajo">Trabajo</option>
+      <option value="escuela">Escuela</option>
+      <option value="amigos">Amigos</option>
+      <option value="pareja">Pareja</option>
+      <option value="cena">Cena</option>
+      <option value="familia">Familia</option>
+      <option value="deporte">Deporte</option>
+      <option value="reuniones">Reuniones</option>
+      <option value="viajes">Viajes</option>
+    </select>
+    <input type="text" id="nuevaExcusa" placeholder="Escribe tu excusa aquí">
+    <br>
+    <button onclick="agregarExcusa()">Agregar Excusa</button>
+  </div>
+
+  <!-- Audio -->
+  <audio id="sonidoExcusa" src="sonido.mp3"></audio>
+
+  <script>
+    // Datos iniciales
+    let excusas = {
+      trabajo: [
+        "Mi computadora se bloqueó justo antes de enviar el correo.",
+        "Se me fue el internet toda la mañana."
+      ],
+      escuela: [
+        "Mi perro se comió la tarea.",
+        "Pensé que la entrega era para mañana."
+      ],
+      amigos: [
+        "Me quedé dormido, perdón.",
+        "Mi mamá no me dejó salir."
+      ],
+      pareja: [
+        "Mi celular se murió, no vi tus mensajes.",
+        "Me quedé sin saldo para llamar."
+      ],
+      cena: [
+        "Me sentí mal del estómago.",
+        "Mi abuelita me pidió ayuda urgente."
+      ],
+      familia: [
+        "Tenía mucho trabajo atrasado.",
+        "Me surgió una cita médica urgente."
+      ],
+      deporte: [
+        "Me lastimé la rodilla entrenando antes.",
+        "Olvidé la hora de la práctica."
+      ],
+      reuniones: [
+        "Se me cruzaron dos eventos a la vez.",
+        "Me quedé atrapado en otra reunión."
+      ],
+      viajes: [
+        "Perdí el vuelo por minutos.",
+        "Olvidé mi pasaporte en casa."
+      ]
+    };
+
+    // Cargar excusas guardadas si existen
+    if (localStorage.getItem('excusasGuardadas')) {
+      excusas = JSON.parse(localStorage.getItem('excusasGuardadas'));
+    }
+
+    function generarExcusa() {
+      const categoriaSeleccionada = document.getElementById('categoria').value;
+      const listaExcusas = excusas[categoriaSeleccionada];
+      const randomIndex = Math.floor(Math.random() * listaExcusas.length);
+      document.getElementById('excusa').textContent = listaExcusas[randomIndex];
+
+      const sonido = document.getElementById('sonidoExcusa');
+      sonido.currentTime = 0;
+      sonido.play();
+    }
+
+    function agregarExcusa() {
+      const categoria = document.getElementById('categoriaNueva').value;
+      const nueva = document.getElementById('nuevaExcusa').value.trim();
+
+      if (nueva.length > 0) {
+        if (!excusas[categoria]) {
+          excusas[categoria] = [];
+        }
+        excusas[categoria].push(nueva);
+        guardarExcusas();
+        alert("¡Excusa agregada y guardada correctamente!");
+        document.getElementById('nuevaExcusa').value = "";
+      } else {
+        alert("Por favor escribe una excusa antes de agregar.");
+      }
+    }
+
+    function guardarExcusas() {
+      localStorage.setItem('excusasGuardadas', JSON.stringify(excusas));
+    }
+  </script>
+
+</body>
+</html>
